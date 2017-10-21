@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,6 +83,34 @@ public class MainActivity extends AppCompatActivity {
 
         editTextCzje = (EditText) findViewById(R.id.et_czje);
         editTextHdxm = (EditText) findViewById(R.id.et_hdxm);
+        editTextCzje.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                String czjeStr = editTextCzje.getText().toString();
+                if(StringUtils.isNotEmpty(czjeStr)){
+                    try {
+                        if(czjeStr.indexOf(".") < czjeStr.length()-1){
+                            Double hdxm = Double.parseDouble(czjeStr) * 21;
+                            editTextHdxm.setText(hdxm + "");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+
         editTextDays = (EditText) findViewById(R.id.et_days);
         Button btnJssy = (Button) findViewById(R.id.btn_jssy);
         btnJssy.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 data.clear();
-                int hdxm = Integer.parseInt(hdxmStr) * 10000;
+                Double hdxm = Double.parseDouble(hdxmStr) * 10000;
                 int damiSum = 0;
                 int cashSum = 0;
                 int days = Integer.parseInt(daysStr);
@@ -120,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     cashSum += cashInt;
                     o.setCashSum(cashSum);
                     hdxm -= damiInt;
-                    o.setXiaomiRest(hdxm);
+                    o.setXiaomiRest(hdxm.intValue());
                     data.add(o);
                 }
 
